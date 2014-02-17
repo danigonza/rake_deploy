@@ -46,7 +46,7 @@ namespace :deploy do
       run_command("cd #{deploy.release_path} && cp config/database.yml #{deploy.deploy_to}/share/database.yml") 
     end
     run_command("cd #{deploy.release_path} && mv config/database.yml config/database.yml.bck") 
-    run_command("ln -s #{deploy.deploy_to}/share/database.yml config/database.yml") 
+    run_command("ln -s #{deploy.deploy_to}/share/database.yml #{deploy.release_path}/config/database.yml") 
   end
 
   desc 'Checkout newer version'
