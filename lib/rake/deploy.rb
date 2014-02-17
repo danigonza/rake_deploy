@@ -9,6 +9,7 @@ namespace :deploy do
   
   desc 'Generate timestamp for revision name'
   task :setup do
+    print_task('setup')
     print_var("Rails enviroment", deploy.rails_env)
     print_var("Git repository", deploy.git_repo)
     print_var("Git barnch", deploy.branch)
@@ -118,7 +119,7 @@ end
 
 def run_command(command)
   print_command(command)
-  (command = 'sudo '+ command) if deploy.sudo
+  #(command = 'sudo '+ command) if deploy.sudo
   begin
     system(command)
     print_command('[--- DONE COMMAND ---]')
