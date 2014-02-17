@@ -33,8 +33,20 @@ namespace :deploy do
     run_command("git clone #{deploy.git_repo} #{deploy.release_path} && cd #{deploy.release_path} && git checkout #{deploy.branch}")
   end
   
+  desc 'cCreate bundle config file'
+  task :bundle_config do
+    print_task('bundle_config')
+    run_command("mkdir -p #{deploy.release_path}/.bundle")
+    run_command("touch #{deploy.release_path}/.bundle/config")
+    run_command("echo '---' >> #{deploy.release_path}/.bundle/config")
+    run_command("echo 'BUNDLE_FROZEN: '1'' >> #{deploy.release_path}/.bundle/config")
+    run_command("echo 'BUNDLE_PATH: #{deploy.share_path}/bundle' >> #{deploy.release_path}/.bundle/config")
+    run_command("echo 'BUNDLE_WITHOUT: development:test:staging' >> #{deploy.release_path}/.bundle/config")
+    run_command("echo 'BUNDLE_DISABLE_SHARED_GEMS: '1'' >> #{deploy.release_path}/.bundle/config")
+  end
+
   desc 'Install all the gems and dependences'
-  task :bundle do
+  task :bundle => [:bundle_config] do
     print_task('bundle')
     run_command("cd #{deploy.release_path} && RAILS_ENV=#{deploy.rails_env} bundle install")
   end
