@@ -36,6 +36,16 @@ namespace :deploy do
     run_command("cd #{deploy.release_path} && RAILS_ENV=#{deploy.rails_env} bundle install")
   end
 
+  desc 'Change database.yml for local version'
+  task :configure_db do
+    print_task('configure_db')
+    unless File.exist?('#{deploy.deploy_to}/share/database.yml') 
+      run_command("cd #{deploy.release_path} && cp config/database.yml #{deploy.deploy_to}/share/database.yml") 
+    end
+    run_command("cd #{deploy.release_path} && mv config/database.yml config/database.yml.bck") 
+    run_command("ln -s #{deploy.deploy_to}/share/database.yml config/database.yml") 
+  end
+
   desc 'Checkout newer version'
   task :checkout => [:setup,:clone_project] do
     print_task('checkout')
@@ -71,7 +81,7 @@ namespace :deploy do
   end
 
   desc 'Symlink to new version'
-  task :symlink => [:checkout,:bundle,:assets,:migration] do
+  task :symlink => [:checkout,:bundle,:configure_db,:assets,:migration] do
     print_task('symlink')
     run_command("unlink #{deploy.deploy_to}/current")
     run_command("ln -s #{deploy.release_path} #{deploy.deploy_to}/current")
