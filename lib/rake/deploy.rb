@@ -110,6 +110,7 @@ end
 
 def run_command(command)
   print_command(command)
+  command = 'sudo '+ command if deploy.sudo
   exec command
   print_command('[--- DONE COMMAND ---]')
 end
