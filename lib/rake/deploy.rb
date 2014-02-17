@@ -119,12 +119,11 @@ end
 def run_command(command)
   print_command(command)
   (command = 'sudo '+ command) if deploy.sudo
-  puts command
   begin
     result = %x(command)
     print_output(result)
+    print_command('[--- DONE COMMAND ---]')
   rescue => err
     print_error(err.message)
   end 
-  print_command('[--- DONE COMMAND ---]')
 end
