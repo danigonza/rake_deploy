@@ -115,7 +115,10 @@ end
 def run_command(command)
   print_command(command)
   (command = 'sudo '+ command) if deploy.sudo
+  puts command
   result = exec command
+  puts result
+  puts 'a'
   print_output(result)
   print_command('[--- DONE COMMAND ---]')
 end
