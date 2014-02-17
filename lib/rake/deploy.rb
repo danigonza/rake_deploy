@@ -104,7 +104,11 @@ def print_task(task)
 end
 
 def print_output(out)
-  print("\u001B[32m" + '=> ' + out + "\u001b[39m")
+  print(out)
+end
+
+def print_error(mssg)
+  print("\u001B[31m" + '=> ' + mssg + "\u001b[39m")
 end
 
 def print(str)
@@ -116,9 +120,13 @@ def run_command(command)
   print_command(command)
   (command = 'sudo '+ command) if deploy.sudo
   puts command
-  result = exec command
+  begin
+    result = exec command
+    print_output(result)
+  rescue => err
+    print_error(err.message)
+  end 
   puts result
   puts 'a'
-  print_output(result)
   print_command('[--- DONE COMMAND ---]')
 end
