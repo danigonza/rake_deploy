@@ -76,10 +76,16 @@ namespace :deploy do
     run_command("ln -s #{deploy.release_path} #{deploy.deploy_to}/current")
   end  
 
-  desc 'Run the aplication'
+  desc 'Run the application'
   task :run => [:symlink] do
     print_task('symlink')
     run_command("cd #{deploy.release_path} && RAILS_ENV=#{deploy.rails_env} rails server -d")
+  end
+
+  desc 'Destroy the application'
+  task :nuke do
+    print_task('nuke')
+    run_command("rm -Rf #{deploy.deploy_to}")
   end
 end
 
