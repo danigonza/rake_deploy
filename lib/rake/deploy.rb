@@ -120,7 +120,7 @@ def run_command(command)
   print_command(command)
   (command = 'sudo '+ command) if deploy.sudo
   begin
-    result = %x(command)
+    result = `command`
     print_output(result)
     print_command('[--- DONE COMMAND ---]')
   rescue => err
