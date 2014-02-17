@@ -126,7 +126,5 @@ def run_command(command)
   rescue => err
     print_error(err.message)
   end 
-  puts result
-  puts 'a'
   print_command('[--- DONE COMMAND ---]')
 end
