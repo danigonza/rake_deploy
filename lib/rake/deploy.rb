@@ -103,6 +103,10 @@ def print_task(task)
   print("\u001B[32m" + '=> ' + task + "\u001b[39m")
 end
 
+def print_output(out)
+  print("\u001B[32m" + '=> ' + out + "\u001b[39m")
+end
+
 def print(str)
   time = Time.now.strftime("%d/%m/%Y %H:%M")
   puts '[' + time + '] ' + str
@@ -110,7 +114,8 @@ end
 
 def run_command(command)
   print_command(command)
-  command = 'sudo '+ command if deploy.sudo
-  exec command
+  (command = 'sudo '+ command) if deploy.sudo
+  result = exec command
+  print_output(result)
   print_command('[--- DONE COMMAND ---]')
 end
