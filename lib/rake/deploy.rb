@@ -17,6 +17,10 @@ namespace :deploy do
     deploy.release_name ||= Time.now.utc.strftime("%Y%m%d%H%M%S")
     deploy.release_path ||= "#{deploy.deploy_to}/releases/#{deploy.release_name}"
     deploy.current_path ||= "#{deploy.deploy_to}/current"
+    deploy.share_path ||= "#{deploy.deploy_to}/share"
+
+    run_command("mkdir -p #{deploy.deploy_to}/releases/")
+    run_command("mkdir -p #{deploy.share_path}/")
 
     print_var('Release name', deploy.release_name);
     print_var('Release path', deploy.release_path);
@@ -26,7 +30,6 @@ namespace :deploy do
   desc 'Clone git repo'
   task :clone_project do
     print_task('clone_project')
-    run_command("mkdir -p #{deploy.deploy_to}/releases/")
     run_command("git clone #{deploy.git_repo} #{deploy.release_path} && cd #{deploy.release_path} && git checkout #{deploy.branch}")
   end
   
