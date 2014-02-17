@@ -73,8 +73,27 @@ namespace :deploy do
     run_command("cd #{deploy.release_path} && RAILS_ENV=#{deploy.rails_env} bundle exec rake assets:precompile")
   end
 
+  desc 'Moving assets to share folder'
+  task :symlink_assets do
+    print_task('symlink_assets')
+    run_command("cd #{deploy.release_path} && mv public/assets #{deploy.share_path}")
+    run_command("ln -s #{deploy.share_path}/assets #{deploy.release_path}/public/assets")
+  end
+
+  desc 'Substitute log folder with local log folder'
+  task :symlink_log do
+    print_task('symlink_logs')
+    #run_command("cd #{deploy.release_path} && rm log")
+    #run_command("ln -s #{deploy.share_path}/logs #{deploy.release_path}/log")
+  end
+  
+
   desc 'Generating assets'
-  task :assets  => [:clean_assets, :precompile_assets] do
+  task :assets  => [:clean_assets, :precompile_assets,:symlink_assets] do
+  end
+
+  desc 'Linking logs'
+  task :logs  => [:symlink_log] do
   end
   
   desc 'Migrating the db'
@@ -84,7 +103,7 @@ namespace :deploy do
   end
 
   desc 'Symlink to new version'
-  task :symlink => [:checkout,:bundle,:configure_db,:assets,:migration] do
+  task :symlink => [:checkout,:bundle,:configure_db,:assets,:logs,:migration] do
     print_task('symlink')
     run_command("unlink #{deploy.deploy_to}/current")
     run_command("ln -s #{deploy.release_path} #{deploy.deploy_to}/current")
@@ -99,7 +118,8 @@ namespace :deploy do
   desc 'Destroy the application'
   task :nuke do
     print_task('nuke')
-    run_command("rm -Rf #{deploy.deploy_to}")
+    run_command("rm -Rf #{deploy.deploy_to}/releases")
+    run_command("rm -Rf #{deploy.deploy_to}/current")
   end
 end
 
