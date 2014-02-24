@@ -10,6 +10,7 @@ namespace :deploy do
   desc 'Generate timestamp for revision name'
   task :setup do
     print_task('setup')
+    print_var('User', deploy.user);
     print_var("Rails enviroment", deploy.rails_env)
     print_var("Git repository", deploy.git_repo)
     print_var("Git barnch", deploy.branch)
