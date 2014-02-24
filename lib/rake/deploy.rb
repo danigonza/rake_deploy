@@ -32,23 +32,25 @@ namespace :deploy do
     print_task('clone_project')
     run_command("git clone #{deploy.git_repo} #{deploy.release_path} && cd #{deploy.release_path} && git checkout #{deploy.branch}")
   end
-  
-  desc 'cCreate bundle config file'
-  task :bundle_config do
-    print_task('bundle_config')
-    run_command("mkdir -p #{deploy.release_path}/.bundle")
-    run_command("touch #{deploy.release_path}/.bundle/config")
-    run_command("echo '---' >> #{deploy.release_path}/.bundle/config")
-    run_command("echo 'BUNDLE_FROZEN: '1'' >> #{deploy.release_path}/.bundle/config")
-    run_command("echo 'BUNDLE_PATH: #{deploy.share_path}/bundle' >> #{deploy.release_path}/.bundle/config")
-    run_command("echo 'BUNDLE_WITHOUT: development:test:staging' >> #{deploy.release_path}/.bundle/config")
-    run_command("echo 'BUNDLE_DISABLE_SHARED_GEMS: '1'' >> #{deploy.release_path}/.bundle/config")
-  end
 
-  desc 'Install all the gems and dependences'
-  task :bundle => [:bundle_config] do
-    print_task('bundle')
-    run_command("cd #{deploy.release_path} && RAILS_ENV=#{deploy.rails_env} bundle install")
+  namespace :bundle do
+    desc 'Create bundle config file'
+    task :config do
+      print_task('bundle_config')
+      run_command("mkdir -p #{deploy.release_path}/.bundle")
+      run_command("touch #{deploy.release_path}/.bundle/config")
+      run_command("echo '---' >> #{deploy.release_path}/.bundle/config")
+      run_command("echo 'BUNDLE_FROZEN: '1'' >> #{deploy.release_path}/.bundle/config")
+      run_command("echo 'BUNDLE_PATH: #{deploy.share_path}/bundle' >> #{deploy.release_path}/.bundle/config")
+      run_command("echo 'BUNDLE_WITHOUT: development:test:staging' >> #{deploy.release_path}/.bundle/config")
+      run_command("echo 'BUNDLE_DISABLE_SHARED_GEMS: '1'' >> #{deploy.release_path}/.bundle/config")
+    end
+
+    desc 'Install all the gems and dependences'
+    task :run => [:config] do
+      print_task('bundle')
+      run_command("cd #{deploy.release_path} && RAILS_ENV=#{deploy.rails_env} bundle install")
+    end
   end
 
   desc 'Change database.yml for local version'
@@ -115,7 +117,7 @@ namespace :deploy do
   end
 
   desc 'Symlink to new version'
-  task :symlink => [:checkout,:bundle,:configure_db,:assets,:logs,:migration] do
+  task :symlink => [:checkout,'bundle:run',:configure_db,:assets,:logs,:migration] do
     print_task('symlink')
     run_command("unlink #{deploy.deploy_to}/current")
     run_command("ln -s #{deploy.release_path} #{deploy.deploy_to}/current")
