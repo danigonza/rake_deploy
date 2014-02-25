@@ -12,8 +12,12 @@ task :deploy => ['deploy:checkout','deploy:bundle:all','deploy:db:configure','de
 namespace :deploy do 
   
   desc 'Generate timestamp for revision name'
-  task :setup  => :deploy do
+  task :setup do
     deploy.print_task('setup')
+
+
+    deploy.print_var("Deploy", deploy.to_s)
+    exit
 
     deploy.print_var("User", deploy.user)
     deploy.print_var("Rails enviroment", deploy.rails_env)

@@ -5,12 +5,16 @@ class Deploy < OpenStruct
   def initialize
     super
     @ssh_sessions = {}
-    self.branch = "master"
-    self.rails_env = "production"
+    self.branch = BRANCH
+    self.rails_env = DEPLOY_RAILS_ENV
     self.shared = %w(/tmp /log /public/system)
-    self.user   = `who am i`.split(" ").first
+    self.user   = `who am i`.split(' ').first
     self.rake_deploy_path = `pwd`.strip
 
+    self.deploy_to = DEPLOY_TO
+    self.git_repo = GIT_REPO
+    self.git_assets_repo  GIT_ASSETS_REPO
+    self.sudo = DEPLOY_SUDO
     self.release_name ||= Time.now.utc.strftime("%Y%m%d%H%M%S")
     self.release_path ||= "#{self.deploy_to}/releases/#{self.release_name}"
     self.current_path ||= "#{self.deploy_to}/current"
