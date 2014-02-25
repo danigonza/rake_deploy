@@ -12,18 +12,13 @@ task :deploy => ['deploy:checkout','deploy:bundle:all','deploy:db:configure','de
 namespace :deploy do 
   
   desc 'Generate timestamp for revision name'
-  task :setup do
+  task :setup  => :deploy do
     deploy.print_task('setup')
 
-    deploy.print_var('User', deploy.user)
+    deploy.print_var("User", deploy.user)
     deploy.print_var("Rails enviroment", deploy.rails_env)
     deploy.print_var("Git repository", deploy.git_repo)
     deploy.print_var("Git barnch", deploy.branch)
-
-    deploy.release_name ||= Time.now.utc.strftime("%Y%m%d%H%M%S")
-    deploy.release_path ||= "#{deploy.deploy_to}/releases/#{deploy.release_name}"
-    deploy.current_path ||= "#{deploy.deploy_to}/current"
-    deploy.share_path ||= "#{deploy.deploy_to}/share"
 
     deploy.run_command("mkdir -p #{deploy.deploy_to}/releases/")
     deploy.run_command("mkdir -p #{deploy.share_path}/")

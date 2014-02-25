@@ -10,6 +10,11 @@ class Deploy < OpenStruct
     self.shared = %w(/tmp /log /public/system)
     self.user   = `who am i`.split(" ").first
     self.rake_deploy_path = `pwd`.strip
+
+    self.release_name ||= Time.now.utc.strftime("%Y%m%d%H%M%S")
+    self.release_path ||= "#{deploy.deploy_to}/releases/#{self.release_name}"
+    self.current_path ||= "#{deploy.deploy_to}/current"
+    self.share_path   ||= "#{deploy.deploy_to}/share"
   end
   
   # Run a command in a remote server:
