@@ -119,7 +119,7 @@ namespace :deploy do
     desc 'Change database.yml for local version'
     task :configure do
       deploy.print_task('db:configure')
-      unless File.exist?('#{deploy.deploy_to}/share/database.yml')
+      unless File.exist?("#{deploy.deploy_to}/share/database.yml")
         deploy.run_command("cd #{deploy.release_path} && cp config/database.yml #{deploy.deploy_to}/share/database.yml")
       end
       deploy.run_command("cd #{deploy.release_path} && mv config/database.yml config/database.yml.bck")
