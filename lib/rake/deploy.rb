@@ -75,6 +75,7 @@ namespace :deploy do
     task :clean do
       deploy.print_task('assets:clean')
       deploy.run_command("cd #{deploy.release_path} && RAILS_ENV=#{deploy.rails_env} bundle exec rake assets:clean")
+      deploy.run_command("rm -Rf #{deploy.share_path}/assets")
     end
 
     desc 'Precompiling assets'
@@ -83,10 +84,16 @@ namespace :deploy do
       deploy.run_command("cd #{deploy.release_path} && RAILS_ENV=#{deploy.rails_env} bundle exec rake assets:precompile")
     end
 
+    desc 'Clone assets from repo assets'
+    task :clone do
+      deploy.print_task('assets:clone')
+      deploy.run_command("cd /tmp && git clone #{deploy.git_assets_repo} assets")
+    end
+
     desc 'Moving assets to share folder'
     task :symlink do
       deploy.print_task('assets:symlink')
-      deploy.run_command("cd #{deploy.release_path} && mv public/assets #{deploy.share_path}")
+      deploy.run_command("cd /tmp && mv assets #{deploy.share_path}")
       deploy.run_command("ln -s #{deploy.share_path}/assets #{deploy.release_path}/public/assets")
     end
 
