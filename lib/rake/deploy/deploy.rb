@@ -9,6 +9,7 @@ class Deploy < OpenStruct
     self.rails_env = "production"
     self.shared = %w(/tmp /log /public/system)
     self.user   = `who am i`.split(" ").first
+    self.rake_deploy_path = `pwd`
   end
   
   # Run a command in a remote server:

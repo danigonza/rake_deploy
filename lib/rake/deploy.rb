@@ -1,6 +1,10 @@
 #require 'rake/hooks'
 require_relative 'deploy/deploy'
 require_relative 'deploy/object'
+require_relative 'unicorn'
+require_relative 'nginx'
+require_relative 'redis'
+require_relative 'sidekiq'
 
 desc 'Deploy the application'
 task :deploy => ['deploy:checkout','deploy:bundle:all','deploy:db:configure','deploy:assets:all','deploy:logs:all','deploy:db:migration','deploy:symlink', 'deploy:run']
@@ -139,13 +143,30 @@ namespace :deploy do
     deploy.print_task('symlink')
     deploy.run_command("unlink #{deploy.deploy_to}/current")
     deploy.run_command("ln -s #{deploy.release_path} #{deploy.deploy_to}/current")
-  end  
+  end
 
   desc 'Run the application'
-  task :run do
+  task :run => ['unicorn:config']do
     deploy.print_task('run')
-    deploy.run_command("cd #{deploy.release_path} && RAILS_ENV=#{deploy.rails_env} rails server -d")
+
+
+    status = `! ps ax | grep -v grep | grep -c nginx &> /dev/null`
+    if status
+      :start
+    else
+      :restart
+    end
   end
+
+  desc 'Start all the system'
+  task :start => ['redis:start', 'nginx:start','unicorn:start', 'sidekiq:start']
+
+  desc 'Stop all the system'
+  task :stop => ['redis:stop', 'nginx:stop', 'unicorn:stop', 'sidekiq:stop']
+
+  desc 'Restart all the system'
+  task :restart => ['redis:restart', 'nginx:restart', 'unicorn:restart', 'sidekiq:restart']
+
 
   desc 'Destroy the application'
   task :nuke do
