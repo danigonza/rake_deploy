@@ -97,7 +97,7 @@ namespace :deploy do
       deploy.run_command("ln -s #{deploy.share_path}/assets #{deploy.release_path}/public/assets")
     end
 
-    task :all => [:clean, :precompile, :symlink]
+    task :all => [:clean, :clone, :symlink]
   end
 
   desc 'Linking logs'
