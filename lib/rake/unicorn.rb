@@ -19,8 +19,8 @@ namespace :unicorn do
   desc "Restarts the unicorn server"
   task :restart do
     deploy.print_task('unicorn:restart')
-    :stop
-    :start
+    Rake::Task['unicorn:stop'].invoke
+    Rake::Task['unicorn:start'].invoke
   end
 
   desc "Reloads the unicorn web server"

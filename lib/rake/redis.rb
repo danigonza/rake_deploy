@@ -15,8 +15,8 @@ namespace :redis do
   desc "Restarts the redis server"
   task :restart do
     deploy.print_task('redis:restart')
-    :stop
-    :start
+    Rake::Task['redis:stop'].invoke
+    Rake::Task['redis:start'].invoke
   end
 
   desc "Reloads the redis server"
