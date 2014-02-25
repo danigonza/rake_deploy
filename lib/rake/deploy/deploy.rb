@@ -13,7 +13,7 @@ class Deploy < OpenStruct
 
     self.deploy_to = DEPLOY_TO
     self.git_repo = GIT_REPO
-    self.git_assets_repo  GIT_ASSETS_REPO
+    self.git_assets_repo = GIT_ASSETS_REPO
     self.sudo = DEPLOY_SUDO
     self.release_name ||= Time.now.utc.strftime("%Y%m%d%H%M%S")
     self.release_path ||= "#{self.deploy_to}/releases/#{self.release_name}"
