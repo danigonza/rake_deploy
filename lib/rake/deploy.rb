@@ -146,14 +146,14 @@ namespace :deploy do
   end
 
   desc 'Run the application'
-  task :run => ['unicorn:config']do
+  task :run => ['unicorn:config'] do
     deploy.print_task('run')
-
-
-    status = `! ps ax | grep -v grep | grep -c nginx &> /dev/null`
-    if status
+    status = `ps ax | grep -v grep | grep -c nginx`
+    if status == 0
+      deploy.print_task('deploy:start')
       :start
     else
+      deploy.print_task('deploy:restart')
       :restart
     end
   end
