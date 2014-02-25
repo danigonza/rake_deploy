@@ -173,5 +173,6 @@ namespace :deploy do
     deploy.print_task('nuke')
     deploy.run_command("rm -Rf #{deploy.deploy_to}/releases")
     deploy.run_command("rm -Rf #{deploy.deploy_to}/current")
+    deploy.run_command("rm -Rf #{deploy.deploy_to}/share/assets")
   end
 end
