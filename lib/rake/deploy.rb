@@ -151,10 +151,10 @@ namespace :deploy do
     status = `ps ax | grep -v grep | grep -c nginx`
     if status == 0
       deploy.print_task('deploy:start')
-      :start
+      start
     else
       deploy.print_task('deploy:restart')
-      :restart
+      restart
     end
   end
 
