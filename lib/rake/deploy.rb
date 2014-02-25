@@ -15,10 +15,6 @@ namespace :deploy do
   task :setup do
     deploy.print_task('setup')
 
-
-    deploy.print_var("Deploy", deploy.to_s)
-    exit
-
     deploy.print_var("User", deploy.user)
     deploy.print_var("Rails enviroment", deploy.rails_env)
     deploy.print_var("Git repository", deploy.git_repo)
