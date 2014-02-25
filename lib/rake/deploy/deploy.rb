@@ -38,8 +38,6 @@ class Deploy < OpenStruct
     output
   end
 
-  private
-
   def print_var(name, var)
     print("\u001B[34m" + name + ': ' + var + "\u001b[39m")
   end
