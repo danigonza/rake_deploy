@@ -37,5 +37,43 @@ class Deploy < OpenStruct
     puts output.split("\n").map{|l| "    #{key}> #{l}"}.join("\n") if output
     output
   end
+
+  private
+
+  def print_var(name, var)
+    print("\u001B[34m" + name + ': ' + var + "\u001b[39m")
+  end
+
+  def print_command(command)
+    print("\u001B[33m" + command  + "\u001b[39m")
+  end
+
+  def print_task(task)
+    print("\u001B[32m" + '=> ' + task + "\u001b[39m")
+  end
+
+  def print_output(out)
+    print(out)
+  end
+
+  def print_error(mssg)
+    print("\u001B[31m" + '=> ' + mssg + "\u001b[39m")
+  end
+
+  def print(str)
+    time = Time.now.strftime("%d/%m/%Y %H:%M")
+    puts '[' + time + '] ' + str
+  end
+
+  def run_command(command)
+    print_command(command)
+    #(command = 'sudo '+ command) if deploy.sudo
+    begin
+      system(command)
+      print_command('[--- DONE COMMAND ---]')
+    rescue => err
+      print_error('[--- ERROR ---]')
+    end
+  end
   
 end
