@@ -7,25 +7,28 @@ namespace :sidekiq do
 
   desc "Quiet sidekiq (stop accepting new work)"
   task :quiet do
-  #  rsudo "if [ -d #{current_path} ]; then cd #{current_path} && if [ -f #{current_path}/tmp/pids/sidekiq.pid ]; then bundle exec sidekiqctl quiet #{current_path}/tmp/pids/sidekiq.pid ; fi; fi", :pty => false, :as => rubber_env.app_user
+    deploy.print_task('sidekiq:quiet')
+    deploy.run_command("if [ -d #{deploy.current_path} ]; then cd #{deploy.current_path} && if [ -f #{deploy.current_path}/tmp/pids/sidekiq.pid ]; then bundle exec sidekiqctl quiet #{deploy.current_path}/tmp/pids/sidekiq.pid ; fi; fi")
   end
 
   desc "Stop sidekiq"
   task :stop  do
-    # Allow workers up to 60 seconds to finish their processing.
-  #  rsudo "cd #{current_path} && if [ -f #{current_path}/tmp/pids/sidekiq.pid ]; then bundle exec sidekiqctl stop #{current_path}/tmp/pids/sidekiq.pid 60 ; fi", :pty => false, :as => rubber_env.app_user
+    deploy.print_task('sidekiq:stop')
+    deploy.run_command("cd #{deploy.current_path} && if [ -f #{deploy.current_path}/tmp/pids/sidekiq.pid ]; then bundle exec sidekiqctl stop #{deploy.current_path}/tmp/pids/sidekiq.pid 60 ; fi")
   end
 
   desc "Start sidekiq"
   task :start do
-  #  rsudo "cd #{current_path} ; nohup bundle exec sidekiq -c 4 -e #{Rubber.env} -C #{current_path}/config/sidekiq.yml -P #{current_path}/tmp/pids/sidekiq.pid >> #{current_path}/log/sidekiq.log 2>&1 &", :pty => false, :as => rubber_env.app_user
-  #  sleep 45 # Give the workers some time to start up before moving on so monit doesn't try to start as well.
+    deploy.print_task('sidekiq:start')
+    deploy.run_command("cd #{deploy.current_path} ; nohup bundle exec sidekiq -e production -C #{deploy.current_path}/config/sidekiq.yml -P #{deploy.current_path}/tmp/pids/sidekiq.pid >> #{deploy.current_path}/log/sidekiq.log 2>&1 &")
+    sleep 45 # Give the workers some time to start up before moving on so monit doesn't try to start as well.
   end
 
   desc "Restart sidekiq"
   task :restart do
-  #  stop
-  #  start
+    deploy.print_task('sidekiq:restart')
+    Rake::Task['sidekiq:stop'].invoke
+    Rake::Task['sidekiq:start'].invoke
   end
 
 end
