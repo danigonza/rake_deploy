@@ -38,9 +38,9 @@ namespace :nginx do
     deploy.print_task('nginx:config')
     deploy.run_command('mkdir -p /mnt/nginx/logs')
     deploy.run_command('mkdir -p /etc/nginx/unicorn')
-    deploy.run_command("cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bck")
-    deploy.run_command("cp /etc/nginx/unicorn/unicorn_nginx.conf /etc/nginx/unicorn/unicorn_nginx.conf.bck")
-    deploy.run_command("cp #{deploy.rake_deploy_path}/config_files/nginx/nginx.conf /etc/nginx/nginx.conf")
-    deploy.run_command("cp #{deploy.rake_deploy_path}/config_files/nginx/unicorn_nginx.conf /etc/nginx/unicorn/unicorn_nginx.conf")
+    #deploy.run_command("cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bck")
+    #deploy.run_command("cp /etc/nginx/unicorn/unicorn_nginx.conf /etc/nginx/unicorn/unicorn_nginx.conf.bck")
+    #deploy.run_command("cp #{deploy.rake_deploy_path}/config_files/nginx/nginx.conf /etc/nginx/nginx.conf")
+    #deploy.run_command("cp #{deploy.rake_deploy_path}/config_files/nginx/unicorn_nginx.conf /etc/nginx/unicorn/unicorn_nginx.conf")
   end
 end
