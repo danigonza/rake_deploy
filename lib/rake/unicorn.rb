@@ -1,9 +1,5 @@
 namespace :unicorn do
 
-  #before "deploy:stop", "unicorn:stop"
-  #after "deploy:start", "unicorn:start"
-  #after "deploy:restart", "unicorn:reload"
-
   desc "Stops the unicorn server"
   task :stop do
     deploy.print_task('unicorn:stop')
