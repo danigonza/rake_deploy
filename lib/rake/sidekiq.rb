@@ -1,10 +1,5 @@
 namespace :sidekiq do
 
-  #before "deploy",        "rubber:sidekiq:quiet"
-  #after "deploy:stop",    "rubber:sidekiq:stop"
-  #after "deploy:start",   "rubber:sidekiq:start"
-  #after "deploy:restart", "rubber:sidekiq:restart"
-
   desc "Quiet sidekiq (stop accepting new work)"
   task :quiet do
     deploy.print_task('sidekiq:quiet')
@@ -29,6 +24,13 @@ namespace :sidekiq do
     deploy.print_task('sidekiq:restart')
     Rake::Task['sidekiq:stop'].invoke
     Rake::Task['sidekiq:start'].invoke
+  end
+
+  desc "Add sidekiq configuration"
+  task :config do
+    deploy.print_task('sidekiq:config')
+    deploy.run_command("rm #{deploy.release_path}/config/initializers/sidekiq.rb")
+    deploy.run_command("cp #{deploy.rake_deploy_path}/config_files/sidekiq/sidekiq.rb #{deploy.release_path}/config/initializers/")
   end
 
 end
