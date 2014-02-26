@@ -1,6 +1,5 @@
 worker_processes 2
 
-#TODO
 #working_directory "/mnt/notegraphy-production/releases/20140224180558"
 working_directory "/mnt/notegraphy-production/current"
 
@@ -19,7 +18,6 @@ listen "/var/run/unicorn.sock", :backlog => 64
 pid "/var/run/unicorn.pid"
 
 # Set the path of the log files inside the log folder of the testapp
-#TODO
 #stderr_path "/mnt/notegraphy-production/releases/20140224180558/log/unicorn.stderr.log"
 #stdout_path "/mnt/notegraphy-production/releases/20140224180558/log/unicorn.stdout.log"
 stderr_path "/mnt/notegraphy-production/current/log/unicorn.stderr.log"

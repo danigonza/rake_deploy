@@ -16,7 +16,6 @@ namespace :nginx do
   task :restart do
     deploy.print_task('nginx:restart')
     deploy.run_command('service nginx restart')
-  #  serial_restart
   end
 
   desc "Reloads the nginx web server"

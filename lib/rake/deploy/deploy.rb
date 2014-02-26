@@ -7,7 +7,6 @@ class Deploy < OpenStruct
     @ssh_sessions = {}
     self.branch = BRANCH
     self.rails_env = DEPLOY_RAILS_ENV
-    self.shared = %w(/tmp /log /public/system)
     self.user   = `who am i`.split(' ').first
     self.rake_deploy_path = `pwd`.strip
 
