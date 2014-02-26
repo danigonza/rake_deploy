@@ -22,6 +22,9 @@ namespace :deploy do
 
     deploy.run_command("mkdir -p #{deploy.deploy_to}/releases/")
     deploy.run_command("mkdir -p #{deploy.share_path}/")
+    deploy.run_command("mkdir -p #{deploy.share_path}/pids")
+    deploy.run_command("mkdir -p #{deploy.share_path}/system")
+    deploy.run_command("mkdir -p #{deploy.share_path}/log")
 
     deploy.print_var('Release name', deploy.release_name)
     deploy.print_var('Release path', deploy.release_path)
@@ -59,12 +62,6 @@ namespace :deploy do
   desc 'Checkout newer version'
   task :checkout => [:setup,:clone_project] do
     deploy.print_task('checkout')
-
-    # TODO
-    #deploy.shared.each do |shared_path|
-    #  deploy.run("rm -rf #{deploy.release_path}#{shared_path}")
-    #  deploy.run("ln -s #{deploy.deploy_to}/shared/scaffold#{shared_path} #{deploy.release_path}#{shared_path}")
-    #end
   end
 
   desc 'Generating assets'
@@ -105,10 +102,9 @@ namespace :deploy do
     desc 'Substitute log folder with local log folder'
     task :symlink do
       deploy.print_task('logs:symlink')
-      #deploy.run_command("cd #{deploy.release_path} && rm log")
-      #deploy.run_command("ln -s #{deploy.share_path}/logs #{deploy.release_path}/log")
+      deploy.run_command("rm -Rf #{deploy.release_path}/log")
+      deploy.run_command("ln -s #{deploy.share_path}/log #{deploy.release_path}/log")
     end
-
 
     task :all => [:symlink]
   end
@@ -136,6 +132,10 @@ namespace :deploy do
   desc 'Symlink to new version'
   task :symlink do
     deploy.print_task('symlink')
+    deploy.run_command("cd #{deploy.release_path}/tmp && rm -Rf pids")
+    deploy.run_command("cd #{deploy.release_path} && ln -s #{deploy.share_path}/pids #{deploy.release_path}/tmp/pids")
+    deploy.run_command("cd #{deploy.release_path}/public && rm -Rf system")
+    deploy.run_command("cd #{deploy.release_path} && ln -s #{deploy.share_path}/system #{deploy.release_path}/public/system")
     deploy.run_command("unlink #{deploy.deploy_to}/current")
     deploy.run_command("ln -s #{deploy.release_path} #{deploy.deploy_to}/current")
   end
