@@ -25,4 +25,13 @@ namespace :redis do
     :restart
   end
 
+  desc "Add redis and sesion configuration"
+  task :config do
+    deploy.print_task('redis:config')
+    deploy.run_command("rm #{deploy.release_path}/config/initializers/redis.rb")
+    deploy.run_command("rm #{deploy.release_path}/config/initializers/session_store.rb")
+    deploy.run_command("cp #{deploy.rake_deploy_path}/config_files/session/session_store.rb #{deploy.release_path}/config/initializers/")
+    deploy.run_command("cp #{deploy.rake_deploy_path}/config_files/redis/redis.rb #{deploy.release_path}/config/initializers/")
+  end
+
 end
